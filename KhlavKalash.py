@@ -46,7 +46,7 @@ class KhlavKalash(irc.IRCClient):
         self.versionEnv = platform.system() + " " + platform.release()
 
         self.commands = ["uptime", "load"]
-        self.silentCommands = {r'(http[s]?://.+)': "url"}
+        self.silentCommands = {r'(http[s]?://\S+)': "url"}
 
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
