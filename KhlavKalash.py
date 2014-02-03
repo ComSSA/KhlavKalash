@@ -125,8 +125,8 @@ class KhlavKalash(irc.IRCClient):
     # Utility Methods
     def msg(self, channel, message):
         """Send a message to a specified channel and log it."""
-        irc.IRCClient.msg(self, channel, message)
-        self.logger.log("<%s> %s" % (self.nickname, message))
+        irc.IRCClient.msg(self, channel, message.encode("utf-8"))
+        self.logger.log("<%s> %s" % (self.nickname, message.encode("utf-8")))
 
 
     # Command framework
@@ -143,8 +143,6 @@ class KhlavKalash(irc.IRCClient):
         response = requests.get(args[0][0])
         soup = BeautifulSoup(response.text)
         return soup.title.string
-
-
 
 
 
