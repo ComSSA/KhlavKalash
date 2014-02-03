@@ -1,0 +1,163 @@
+# twisted imports
+from twisted.words.protocols import irc
+from twisted.internet import reactor, protocol
+from twisted.python import log
+
+# used in bot functionality
+import platform
+import subprocess
+import re
+from socket import gethostname
+
+# system imports
+import time, sys
+
+class MessageLogger:
+    """
+    A logging class.
+    """
+    def __init__(self, file):
+        self.file = file
+
+    def log(self, message):
+        """Write a message to the file."""
+        timestamp = time.strftime("[%H:%M:%S]", time.localtime(time.time()))
+        self.file.write('%s %s\n' % (timestamp, message))
+        self.file.flush()
+
+    def close(self):
+        self.file.close()
+
+
+class KhlavKalash(irc.IRCClient):
+    """The Khlav Kalash IRC bot."""
+
+    def __init__(self, factory):
+        self.factory = factory
+
+        self.nickname = factory.nickname
+        self.username = factory.username
+        self.realname = factory.realname
+
+        self.versionName = "KhlavKalash"
+        self.versionNum = 1.0
+        self.versionEnv = platform.system() + " " + platform.release()
+
+        self.commands = ["uptime", "load", "hello"]
+
+    def connectionMade(self):
+        irc.IRCClient.connectionMade(self)
+        self.logger = MessageLogger(open(self.factory.filename, "a"))
+        self.logger.log("[connected at %s]" % 
+                        time.asctime(time.localtime(time.time())))
+
+    def connectionLost(self, reason):
+        irc.IRCClient.connectionLost(self, reason)
+        self.logger.log("[disconnected at %s]" % 
+                        time.asctime(time.localtime(time.time())))
+        self.logger.close()
+
+
+    # callbacks for events
+
+    def signedOn(self):
+        """Called when bot has succesfully signed on to server."""
+        self.join(self.factory.channel)
+
+
+    def joined(self, channel):
+        """Called when the bot joins the channel."""
+        self.logger.log("[Joined %s]" % channel)
+
+
+    def privmsg(self, user, channel, msg):
+        """Called when the bot receives a message."""
+
+        # log the message
+        user = user.split('!', 1)[0]
+        self.logger.log("<%s> %s" % (user, msg))
+
+        # Otherwise check to see if it is a command and if it's in the allowed list
+        commandRegex = r',(?P<command>\S+)\s*(?P<args>.*)'
+        match = re.match(commandRegex, msg)
+
+        if match:
+            output = ""
+            command = match.group("command").strip()
+            allowed = [availableCommand for availableCommand in self.commands if availableCommand == command]
+
+            if allowed:
+                args = match.group("args")
+                output = self.execute(command, args)
+
+                self.msg(channel, output)
+            else:
+                self.logger.log("Invalid command %s executed by %s in %s" % (command, user, channel))
+
+
+    def action(self, user, channel, msg):
+        """This will get called when the bot sees someone do an action."""
+        user = user.split('!', 1)[0]
+        self.logger.log("* %s %s" % (user, msg))
+
+
+    def irc_NICK(self, prefix, params):
+        """Called when an IRC user changes their nickname."""
+        old_nick = prefix.split('!')[0]
+        new_nick = params[0]
+        self.logger.log("%s is now known as %s" % (old_nick, new_nick))
+
+
+    # Utility Methods
+    def msg(self, channel, message):
+        """Send a message to a specified channel and log it."""
+        irc.IRCClient.msg(self, channel, message)
+        self.logger.log("<%s> %s" % (self.nickname, message))
+
+
+    # Command framework
+    def execute(self, command, args):
+        """Execute a bot command (just a method in this class)."""
+        command_method = getattr(self, command)
+        return command_method(args)
+
+    def uptime(self, *args):
+        return "Load for %s: " % gethostname() + subprocess.check_output(["uptime"])
+
+
+class KhlavKalashStand(protocol.ClientFactory):
+    """A factory for KhlavKalash.
+
+    Khlav kalash! Get your khlav kalash!
+    """
+
+    def __init__(self):
+        self.nickname = "khlavkalash"
+        self.username = "khlav"
+        self.realname = "No bowl, only stick!"
+        self.channel = "#comssa"
+        self.filename = "comssa.log"
+
+    def buildProtocol(self, addr):
+        p = KhlavKalash(self)
+        return p
+
+    def clientConnectionLost(self, connector, reason):
+        """If we get disconnected, reconnect to server."""
+        connector.connect()
+
+    def clientConnectionFailed(self, connector, reason):
+        print "connection failed:", reason
+        reactor.stop()
+
+
+if __name__ == '__main__':
+    # initialize logging
+    log.startLogging(sys.stdout)
+    
+    # create protocol and connect
+    f = KhlavKalashStand()
+    reactor.connectTCP("irc.comssa.org.au", 6667, f)
+
+    # run bot
+    reactor.run()
