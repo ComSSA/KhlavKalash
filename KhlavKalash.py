@@ -144,8 +144,10 @@ class KhlavKalash(irc.IRCClient):
         soup = BeautifulSoup(response.text)
 
         if soup.title and soup.title.text:
-                return ' '.join(soup.title.string.replace('\n', '').split())
-        
+            title = ' '.join(soup.title.string.replace('\n', '').split())
+            
+            if len(title) > 120:
+                title = title[:117] + "..."
 
 
 
