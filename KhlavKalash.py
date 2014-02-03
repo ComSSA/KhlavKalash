@@ -145,16 +145,21 @@ class KhlavKalash(irc.IRCClient):
         return "Uptime for %s: " % gethostname() + subprocess.check_output(["uptime"])
 
     def url(self, *args):
-        response = requests.get(args[0][0])
-        soup = BeautifulSoup(response.text)
-
-        if soup.title and soup.title.text:
-            title = ' '.join(soup.title.string.replace('\n', '').split())
-            
-            if len(title) > 120:
-                title = title[:117] + "..."
-
-            return title
+        try:
+            url = args[0][0]
+            response = requests.get(url)
+        except (requests.exceptions.ConnectionError) as e:
+            print "Failed to load URL: %s" % url
+        else:
+            soup = BeautifulSoup(response.text)
+             
+            if soup.title and soup.title.text:
+                title = ' '.join(soup.title.string.replace('\n', '').split())
+                
+                if len(title) > 120:
+                    title = title[:117] + "..."
+                
+                return title
 
 
 
