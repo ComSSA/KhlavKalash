@@ -157,7 +157,7 @@ class KhlavKalashStand(protocol.ClientFactory):
         self.nickname = "khlavkalash"
         self.username = "khlav"
         self.realname = "No bowl, only stick!"
-        self.channel = "#comssa_test"
+        self.channel = "#comssa"
         self.filename = "comssa.log"
 
     def buildProtocol(self, addr):
