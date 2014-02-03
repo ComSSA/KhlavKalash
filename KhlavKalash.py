@@ -7,6 +7,8 @@ from twisted.python import log
 import platform
 import subprocess
 import re
+import requests
+from bs4 import BeautifulSoup
 from socket import gethostname
 
 # system imports
@@ -44,6 +46,7 @@ class KhlavKalash(irc.IRCClient):
         self.versionEnv = platform.system() + " " + platform.release()
 
         self.commands = ["uptime", "load"]
+        self.silentCommands = {r'(http[s]?://.+\..+)': "url"}
 
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
@@ -77,7 +80,7 @@ class KhlavKalash(irc.IRCClient):
         user = user.split('!', 1)[0]
         self.logger.log("<%s> %s" % (user, msg))
 
-        # Otherwise check to see if it is a command and if it's in the allowed list
+        # Otherwise check to see if it is a command and if it's in the allowed list.
         commandRegex = r',(?P<command>\S+)\s*(?P<args>.*)'
         match = re.match(commandRegex, msg)
 
@@ -93,6 +96,17 @@ class KhlavKalash(irc.IRCClient):
                 self.msg(channel, output)
             else:
                 self.logger.log("Invalid command %s executed by %s in %s" % (command, user, channel))
+
+        # Check if silent command criteria has been met.
+        for currentRegex in self.silentCommands:
+            match = re.findall(currentRegex, msg)
+
+            if match:
+                command = self.silentCommands[currentRegex]
+                output = self.execute(command, match)
+
+                if output:
+                    self.msg(channel, output)
 
 
     def action(self, user, channel, msg):
@@ -123,7 +137,15 @@ class KhlavKalash(irc.IRCClient):
 
     # Commands
     def uptime(self, *args):
-        return "Load for %s: " % gethostname() + subprocess.check_output(["uptime"])
+        return "Uptime for %s: " % gethostname() + subprocess.check_output(["uptime"])
+
+    def url(self, *args):
+        response = requests.get(args[0][0])
+        soup = BeautifulSoup(response.text)
+        return soup.title.string
+
+
+
 
 
 class KhlavKalashStand(protocol.ClientFactory):
@@ -136,7 +158,7 @@ class KhlavKalashStand(protocol.ClientFactory):
         self.nickname = "khlavkalash"
         self.username = "khlav"
         self.realname = "No bowl, only stick!"
-        self.channel = "#comssa"
+        self.channel = "#comssa_test"
         self.filename = "comssa.log"
 
     def buildProtocol(self, addr):
