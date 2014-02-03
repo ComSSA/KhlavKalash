@@ -43,7 +43,7 @@ class KhlavKalash(irc.IRCClient):
         self.versionNum = 1.0
         self.versionEnv = platform.system() + " " + platform.release()
 
-        self.commands = ["uptime", "load", "hello"]
+        self.commands = ["uptime", "load"]
 
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
@@ -121,6 +121,7 @@ class KhlavKalash(irc.IRCClient):
         command_method = getattr(self, command)
         return command_method(args)
 
+    # Commands
     def uptime(self, *args):
         return "Load for %s: " % gethostname() + subprocess.check_output(["uptime"])
 
