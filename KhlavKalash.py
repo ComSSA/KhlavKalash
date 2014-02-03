@@ -142,7 +142,11 @@ class KhlavKalash(irc.IRCClient):
     def url(self, *args):
         response = requests.get(args[0][0])
         soup = BeautifulSoup(response.text)
-        return ' '.join(soup.title.string.replace('\n', '').split())
+
+        if soup.title and soup.title.text:
+                return ' '.join(soup.title.string.replace('\n', '').split())
+        
+
 
 
 
