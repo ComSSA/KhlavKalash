@@ -11,6 +11,9 @@ import requests
 from bs4 import BeautifulSoup
 from socket import gethostname
 
+# read config files
+from ConfigParser import SafeConfigParser
+
 # system imports
 import time, sys
 
@@ -41,6 +44,8 @@ class KhlavKalash(irc.IRCClient):
         self.username = factory.username
         self.realname = factory.realname
 
+        self.prefix = factory.prefix
+
         self.versionName = "KhlavKalash"
         self.versionNum = 1.0
         self.versionEnv = platform.system() + " " + platform.release()
@@ -65,7 +70,7 @@ class KhlavKalash(irc.IRCClient):
 
     def signedOn(self):
         """Called when bot has succesfully signed on to server."""
-        self.join(self.factory.channel)
+        self.join(self.factory.channels)
 
 
     def joined(self, channel):
@@ -81,7 +86,7 @@ class KhlavKalash(irc.IRCClient):
         self.logger.log("<%s> %s" % (user, msg))
 
         # Otherwise check to see if it is a command and if it's in the allowed list.
-        commandRegex = r',(?P<command>\S+)\s*(?P<args>.*)'
+        commandRegex = r'%s(?P<command>\S+)\s*(?P<args>.*)' % self.prefix
         match = re.match(commandRegex, msg)
 
         if match:
@@ -149,6 +154,8 @@ class KhlavKalash(irc.IRCClient):
             if len(title) > 120:
                 title = title[:117] + "..."
 
+            return title
+
 
 
 
@@ -158,13 +165,6 @@ class KhlavKalashStand(protocol.ClientFactory):
 
     Khlav kalash! Get your khlav kalash!
     """
-
-    def __init__(self):
-        self.nickname = "khlavkalash"
-        self.username = "khlav"
-        self.realname = "No bowl, only stick!"
-        self.channel = "#comssa"
-        self.filename = "comssa.log"
 
     def buildProtocol(self, addr):
         p = KhlavKalash(self)
@@ -183,9 +183,21 @@ if __name__ == '__main__':
     # initialize logging
     log.startLogging(sys.stdout)
     
-    # create protocol and connect
+    # create protocol and configure.
     f = KhlavKalashStand()
-    reactor.connectTCP("irc.comssa.org.au", 6667, f)
+
+    conf = SafeConfigParser()
+    conf.read('KhlavKalash.conf')
+
+    f.nickname = conf.get('Bot', 'nickname')
+    f.username = conf.get('Bot', 'username')
+    f.realname = conf.get('Bot', 'realname')
+    f.prefix = conf.get('Bot', 'prefix')
+    f.channels = conf.get('Server', 'channels')
+    f.filename = conf.get('Logging', 'filename')
+
+    reactor.connectTCP(conf.get('Server', 'hostname'), 
+        int(conf.get('Server', 'port')), f)
 
     # run bot
     reactor.run()
