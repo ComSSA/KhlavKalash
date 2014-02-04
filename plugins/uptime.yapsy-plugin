@@ -1,0 +1,9 @@
+[Core]
+Name = Uptime
+Module = uptime
+
+[Documentation]
+Author = Kye Russell
+Version = 1.0
+Website = http://kyerussell.com
+Description = Displays the system uptime and load information

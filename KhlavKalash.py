@@ -5,14 +5,16 @@ from twisted.python import log
 
 # used in bot functionality
 import platform
-import subprocess
 import re
-import requests
-from bs4 import BeautifulSoup
-from socket import gethostname
 
 # read config files
 from ConfigParser import SafeConfigParser
+
+# Plugin Architecture 
+from yapsy.PluginManager import PluginManagerSingleton
+from plugins.categories import IRegularCommand, ISilentCommand
+
+import logging
 
 # system imports
 import time, sys
@@ -40,6 +42,7 @@ class KhlavKalash(irc.IRCClient):
     def __init__(self, factory):
         self.factory = factory
 
+        # configure  bot settings
         self.nickname = factory.nickname
         self.username = factory.username
         self.realname = factory.realname
@@ -47,11 +50,13 @@ class KhlavKalash(irc.IRCClient):
         self.prefix = factory.prefix
 
         self.versionName = "KhlavKalash"
-        self.versionNum = 1.0
+        self.versionNum = 2.0
         self.versionEnv = platform.system() + " " + platform.release()
 
-        self.commands = ["uptime", "load"]
-        self.silentCommands = {r'(http[s]?://\S+)': "url"}
+        # give plugin manager to bot instance.
+        self.pm = PluginManagerSingleton.get()
+        self.pm.bot = self
+
 
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
@@ -85,34 +90,28 @@ class KhlavKalash(irc.IRCClient):
         user = user.split('!', 1)[0]
         self.logger.log("<%s> %s" % (user, msg))
 
-        # Otherwise check to see if it is a command and if it's in the allowed list.
+        output = []
+
+        # check to see if it is a command and if it's in the allowed list.
         commandRegex = r'%s(?P<command>\S+)\s*(?P<args>.*)' % self.prefix
         match = re.match(commandRegex, msg)
 
         if match:
-            output = ""
             command = match.group("command").strip()
-            allowed = [availableCommand for availableCommand in self.commands if availableCommand == command]
+            args = match.group("args")
 
-            if allowed:
-                args = match.group("args")
-                output = self.execute(command, args)
+            # pass the command to all plugins to see if we get a response
+            for plugin in self.pm.getPluginsOfCategory("Regular"):
+                output.append(plugin.plugin_object.checked_run(command, args))
 
-                self.msg(channel, output)
-            else:
-                self.logger.log("Invalid command %s executed by %s in %s" % (command, user, channel))
+        # check for silent commands
+        for plugin in self.pm.getPluginsOfCategory("Silent"):
+                output.append(plugin.plugin_object.checked_run(msg))
 
-        # Check if silent command criteria has been met.
-        for currentRegex in self.silentCommands:
-            match = re.findall(currentRegex, msg)
-
-            if match:
-                command = self.silentCommands[currentRegex]
-                output = self.execute(command, match)
-
-                if output:
-                    self.msg(channel, output)
-
+        # pass all non-None responses to the channel
+        for current_output in output:
+            if current_output is not None:
+                self.msg(channel, current_output)
 
     def action(self, user, channel, msg):
         """This will get called when the bot sees someone do an action."""
@@ -140,31 +139,6 @@ class KhlavKalash(irc.IRCClient):
         command_method = getattr(self, command)
         return command_method(args)
 
-    # Commands
-    def uptime(self, *args):
-        return "Uptime for %s: " % gethostname() + subprocess.check_output(["uptime"])
-
-    def url(self, *args):
-        try:
-            url = args[0][0]
-            response = requests.get(url)
-        except (requests.exceptions.ConnectionError) as e:
-            print "Failed to load URL: %s" % url
-        else:
-            soup = BeautifulSoup(response.text)
-             
-            if soup.title and soup.title.text:
-                title = ' '.join(soup.title.string.replace('\n', '').split())
-                
-                if len(title) > 120:
-                    title = title[:117] + "..."
-                
-                return title
-
-
-
-
-
 class KhlavKalashStand(protocol.ClientFactory):
     """A factory for KhlavKalash.
 
@@ -187,16 +161,29 @@ class KhlavKalashStand(protocol.ClientFactory):
 if __name__ == '__main__':
     # initialize logging
     log.startLogging(sys.stdout)
-    
-    # create protocol and configure.
-    f = KhlavKalashStand()
 
+    # load the configuration file
     conf = SafeConfigParser()
     conf.read('KhlavKalash.conf')
 
     # activate debugging mode if necessary.
     if (conf.getboolean("Bot", "debug")):
         logging.basicConfig(level=logging.DEBUG)
+
+
+    # initialise plugin manager and load plugins
+    pm = PluginManagerSingleton.get()
+    pm.setPluginPlaces(["plugins"])
+    pm.setCategoriesFilter({
+        "Regular" : IRegularCommand,
+        "Silent"  : ISilentCommand,
+    })
+
+    pm.collectPlugins()
+
+    # create protocol and configure.
+    f = KhlavKalashStand()
+
     f.nickname = conf.get('Bot', 'nickname')
     f.username = conf.get('Bot', 'username')
     f.realname = conf.get('Bot', 'realname')
