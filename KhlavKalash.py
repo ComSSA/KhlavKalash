@@ -194,6 +194,9 @@ if __name__ == '__main__':
     conf = SafeConfigParser()
     conf.read('KhlavKalash.conf')
 
+    # activate debugging mode if necessary.
+    if (conf.getboolean("Bot", "debug")):
+        logging.basicConfig(level=logging.DEBUG)
     f.nickname = conf.get('Bot', 'nickname')
     f.username = conf.get('Bot', 'username')
     f.realname = conf.get('Bot', 'realname')
