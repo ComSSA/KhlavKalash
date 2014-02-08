@@ -1,0 +1,9 @@
+[Core]
+Name = SQLogger
+Module = sqlogger
+
+[Documentation]
+Author = Kye Russell
+Version = 1.0
+Website = http://kyerussell.com
+Description = Logs events to a SQLite database
