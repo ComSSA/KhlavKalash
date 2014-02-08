@@ -18,6 +18,7 @@ class URLGrabber (ISilentCommand):
             if soup.title and soup.title.text:
                 title = soup.title.string
                 title = title.replace('\n', '')    # remove mewlines
+                title = title.replace('\x01', '')  # remove dangerous control character \001
                 title = ' '.join(title.split())    # normalise all other whitespace
 
                 # Truncate length
