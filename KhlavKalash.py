@@ -15,7 +15,6 @@ from ConfigParser import SafeConfigParser
 # Plugin Architecture 
 from yapsy.PluginManager import PluginManagerSingleton
 from plugins.categories import IRegularCommand, ISilentCommand
-
 import logging
 
 # system imports
@@ -108,7 +107,7 @@ class KhlavKalash(irc.IRCClient):
 
         # check for silent commands
         for plugin in self.pm.getPluginsOfCategory("Silent"):
-                output.append(plugin.plugin_object.run(msg))
+                output.append(plugin.plugin_object.run(user, channel, msg))
 
         # pass all non-None responses to the channel
         for current_output in output:

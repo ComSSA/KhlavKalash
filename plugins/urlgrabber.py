@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 class URLGrabber (ISilentCommand):
     triggers = {r'(http[s]?://\S+)': "url"}
 
-    def trigger_url(self, match):
+    def trigger_url(self, user, channel, match):
         try:
             url = match.group(1)
             response = requests.get(url)
