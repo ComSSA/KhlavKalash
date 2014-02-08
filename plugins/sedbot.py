@@ -33,7 +33,7 @@ class Sedbot (ISilentCommand):
                     self.last,
                     flags=flags
                 )
-                return '[%s]' % result
+                return result
         else:
             self.last = message
 
