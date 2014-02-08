@@ -1,7 +1,7 @@
 from plugins.categories import ISilentCommand
 
 import regex
-import json
+import copy
 
 class Sedbot (ISilentCommand):
     triggers = {
@@ -20,20 +20,22 @@ class Sedbot (ISilentCommand):
         message = match.group(1)
         if regex.match(r'^s/.*/.*/.*$', message):
             if self.last is not None:
-                sed_obj = self.parse(message)
-                flags = 0
-                if sed_obj['flags']['insensitive']:
-                    flags |= regex.IGNORECASE
-                # TODO: global and offset flag handling
-                # doesn't appear to be possible with the python re API
-                # ...at least not in a simple regex.sub() call
-                result = regex.sub(
-                    sed_obj['needle'],
-                    sed_obj['replacement'],
-                    self.last,
-                    flags=flags
-                )
-                return result
+                sed_objs = self.parse(message)
+                if sed_objs is not None:
+                    for sed_obj in sed_objs:
+                        flags = 0
+                        if sed_obj['flags']['insensitive']:
+                            flags |= regex.IGNORECASE
+                        # TODO: global and offset flag handling
+                        # doesn't appear to be possible with the python re API
+                        # ...at least not in a simple regex.sub() call
+                        self.last = regex.sub(
+                            sed_obj['needle'],
+                            sed_obj['replacement'],
+                            self.last,
+                            flags=flags
+                        )
+                    return self.last
         else:
             self.last = message
 
@@ -41,27 +43,31 @@ class Sedbot (ISilentCommand):
     def parse(expr):
         def error(i, message):
             print 'sed parse error: %d: %s' % (i, message)
+        def skeleton():
+            return copy.copy({
+                'needle': '',
+                'replacement': '',
+                'flags': {
+                    'global': False,
+                    'insensitive': False,
+                    'offset': 1
+                }
+            })
+        def skelhits():
+            return copy.copy({
+                'start': 0,
+                'ready': 0,
+                'needle': 0,
+                'needle_backslash': 0,
+                'replacement': 0,
+                'replacement_backslash': 0,
+                'flags': 0,
+                'flags_offset': 0
+            })
         state = 'start'
-        out = {
-            'needle': '',
-            'replacement': '',
-            'flags': {
-                'global': False,
-                'insensitive': False,
-                'offset': 1
-            }
-        }
-        # how many characters fall into each state
-        hits = {
-            'start': 0,
-            'ready': 0,
-            'needle': 0,
-            'needle_backslash': 0,
-            'replacement': 0,
-            'replacement_backslash': 0,
-            'flags': 0,
-            'flags_offset': 0
-        }
+        result = []
+        out = skeleton()
+        hits = skelhits()
         for i, c in enumerate(expr):
             hits[state] += 1
             if state == 'start':
@@ -110,6 +116,11 @@ class Sedbot (ISilentCommand):
                     out['flags']['global'] = True
                 elif f == 'i':
                     out['flags']['insensitive'] = True
+                elif f == ';':
+                    result.append(out)
+                    out = skeleton()
+                    hits = skelhits()
+                    state = 'start'
                 elif f.isdigit():
                     if hits['flags_offset'] == 0:
                         out['flags']['offset'] = int(f)
@@ -129,10 +140,16 @@ class Sedbot (ISilentCommand):
                 elif f == 'i':
                     out['flags']['insensitive'] = True
                     state = 'flags'
+                elif f == ';':
+                    result.append(out)
+                    out = skeleton()
+                    hits = skelhits()
+                    state = 'start'
                 else:
                     return error(i, 'invalid flag')
             else:
                 return error(i, 'invalid parser state')
         if state != 'flags' and state != 'flags_offset':
             return error(i, 'invalid parser state at end of expression')
-        return out
+        result.append(out)
+        return result
