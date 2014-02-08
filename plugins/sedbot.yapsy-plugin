@@ -1,0 +1,9 @@
+[Core]
+Name = sedbot
+Module = sedbot
+
+[Documentation]
+Author = Delan Azabani
+Version = 0.0
+Website = http://www.azabani.com/
+Description = Executes sed expressions for users
