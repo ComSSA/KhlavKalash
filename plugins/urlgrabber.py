@@ -16,8 +16,12 @@ class URLGrabber (ISilentCommand):
             soup = BeautifulSoup(response.text)
              
             if soup.title and soup.title.text:
-                title = ' '.join(soup.title.string.replace('\n', '').split())
-                
+                title = soup.title.string
+                title = title.replace('\n', '')    # remove mewlines
+                title = title.replace('\x01', '')  # remove dangerous control character \001
+                title = ' '.join(title.split())    # normalise all other whitespace
+
+                # Truncate length
                 if len(title) > 120:
                     title = title[:117] + "..."
                 
