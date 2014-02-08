@@ -16,25 +16,7 @@ from ConfigParser import SafeConfigParser
 from yapsy.PluginManager import PluginManagerSingleton
 from plugins.categories import IRegularCommand, ISilentCommand
 import logging
-
-# system imports
-import time, sys
-
-class MessageLogger:
-    """
-    A logging class.
-    """
-    def __init__(self, file):
-        self.file = file
-
-    def log(self, message):
-        """Write a message to the file."""
-        timestamp = time.strftime("[%H:%M:%S]", time.localtime(time.time()))
-        self.file.write('%s %s\n' % (timestamp, message))
-        self.file.flush()
-
-    def close(self):
-        self.file.close()
+import sys
 
 
 class KhlavKalash(irc.IRCClient):
@@ -58,18 +40,11 @@ class KhlavKalash(irc.IRCClient):
         self.pm = PluginManagerSingleton.get()
         self.pm.bot = self
 
-
     def connectionMade(self):
         irc.IRCClient.connectionMade(self)
-        self.logger = MessageLogger(open(self.factory.filename, "a"))
-        self.logger.log("[connected at %s]" % 
-                        time.asctime(time.localtime(time.time())))
 
     def connectionLost(self, reason):
         irc.IRCClient.connectionLost(self, reason)
-        self.logger.log("[disconnected at %s]" % 
-                        time.asctime(time.localtime(time.time())))
-        self.logger.close()
 
 
     # callbacks for events
@@ -78,19 +53,12 @@ class KhlavKalash(irc.IRCClient):
         """Called when bot has succesfully signed on to server."""
         self.join(self.factory.channels)
 
-
     def joined(self, channel):
         """Called when the bot joins the channel."""
-        self.logger.log("[Joined %s]" % channel)
-
 
     def privmsg(self, user, channel, msg):
         """Called when the bot receives a message."""
-
-        # log the message
-        user = user.split('!', 1)[0]
-        self.logger.log("<%s> %s" % (user, msg))
-
+        # prepare output list
         output = []
 
         # check to see if it is a command and if it's in the allowed list.
@@ -116,23 +84,14 @@ class KhlavKalash(irc.IRCClient):
 
     def action(self, user, channel, msg):
         """This will get called when the bot sees someone do an action."""
-        user = user.split('!', 1)[0]
-        self.logger.log("* %s %s" % (user, msg))
-
 
     def irc_NICK(self, prefix, params):
         """Called when an IRC user changes their nickname."""
-        old_nick = prefix.split('!')[0]
-        new_nick = params[0]
-        self.logger.log("%s is now known as %s" % (old_nick, new_nick))
-
 
     # Utility Methods
     def msg(self, channel, message):
         """Send a message to a specified channel and log it."""
         irc.IRCClient.msg(self, channel, message.encode("utf-8"))
-        self.logger.log("<%s> %s" % (self.nickname, message.encode("utf-8")))
-
 
     # Command framework
     def execute(self, command, args):
