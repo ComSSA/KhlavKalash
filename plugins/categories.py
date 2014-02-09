@@ -12,12 +12,12 @@ class IRegularCommand (IPlugin):
 class ISilentCommand (IPlugin):
 	triggers = {}
 
-	def run(self, msg):
+	def run(self, user, channel, msg):
 		for trigger in self.triggers:
 			match = re.match(trigger, msg)
 
 			if match:
 				try:
-					return getattr(self, "trigger_" + self.triggers[trigger])(match)
+					return getattr(self, "trigger_" + self.triggers[trigger])(user, channel, match)
 				except AttributeError as e:
 					pass
