@@ -90,8 +90,6 @@ class Sedbot (ISilentCommand):
             elif state == 'needle_backslash':
                 if c == '/':
                     out['needle'] += '/'
-                elif c == '\\':
-                    out['needle'] += '\\'
                 else:
                     out['needle'] += '\\' + c
                 state = 'needle'
@@ -105,8 +103,6 @@ class Sedbot (ISilentCommand):
             elif state == 'replacement_backslash':
                 if c == '/':
                     out['replacement'] += '/'
-                elif c == '\\':
-                    out['replacement'] += '\\'
                 else:
                     out['replacement'] += '\\' + c
                 state = 'replacement'
