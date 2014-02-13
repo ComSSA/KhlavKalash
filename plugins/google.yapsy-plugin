@@ -1,0 +1,9 @@
+[Core]
+Name = Google
+Module = google
+
+[Documentation]
+Author = Kye Russell
+Version = 1.0
+Website = http://kyerussell.com
+Description = Returns the top Google search result for a particular query.
