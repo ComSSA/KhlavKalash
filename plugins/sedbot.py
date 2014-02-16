@@ -19,6 +19,8 @@ class Sedbot (ISilentCommand):
     def trigger_sed(self, user, channel, match):
         message = match.group(1).decode('utf-8')
         if regex.match(r'^s/.*/.*/.*$', message):
+            if 'James_T' in user:
+                return
             if self.last is not None:
                 sed_objs = self.parse(message)
                 if sed_objs is not None:
