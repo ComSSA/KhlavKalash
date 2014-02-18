@@ -18,23 +18,16 @@ class Sedbot (ISilentCommand):
             self.backlog.append((user, channel, message))
 
     def trigger_sed(self, user, channel, match):
-        print "triggered sed"
         sed = match.group(1).decode('utf-8')
         # No abuse
         if 'James_T' in user:
             return
         if self.backlog is not []:
-            print "backlog is fine: %s" % self.backlog
             for message in reversed(self.backlog):
-                print "parsing message %s" % message[2]
                 if (channel == message[1]):
-                    print "channel matches!"
-                    print "getting sed objects for expression '%s'" % sed
                     sed_objs = self.parse(sed)
                     if sed_objs is not None:
-                        print "got repl objects: %s" % sed_objs
                         for sed_obj in sed_objs:
-                            print "using repl object %s" % sed_obj
                             flags = 0
                             if sed_obj['flags']['insensitive']:
                                 flags |= regex.IGNORECASE
