@@ -5,43 +5,46 @@ import copy
 
 class Sedbot (ISilentCommand):
     triggers = {
-        r'(.*)': "log",
-        r'(^s/.*/.*/.*$)': 'sed'
+        r'(.*)': "sed",
     }
 
     def __init__(self):
         self.backlog = []
 
-    def trigger_log(self, user, channel, match):
-        message = match.group(1)
-        if not regex.match(r'^s/.*/.*/.*$', message):
-            self.backlog.append((user, channel, message))
+    # Unfortunately you can't have separate triggers for logging and replacing
+    # because whether it will work depends on the order the triggers dict is
+    # iterated through, which is not something you can depend on.
 
     def trigger_sed(self, user, channel, match):
-        sed = match.group(1).decode('utf-8')
+        incoming_message = match.group(1)
+        sed_match = regex.match(r'^s/.*/.*/.*$', incoming_message)
+        if not sed_match:
+            self.backlog.append((user, channel, incoming_message))
+            return
         # No abuse
         if 'James_T' in user:
             return
-        if self.backlog is not []:
-            for message in reversed(self.backlog):
-                if (channel == message[1]):
-                    sed_objs = self.parse(sed)
-                    if sed_objs is not None:
-                        for sed_obj in sed_objs:
-                            flags = 0
-                            if sed_obj['flags']['insensitive']:
-                                flags |= regex.IGNORECASE
-                            # TODO: global and offset flag handling
-                            # doesn't appear to be possible with the python re API
-                            # ...at least not in a simple regex.sub() call
-                            edit = regex.sub(
-                                sed_obj['needle'],
-                                sed_obj['replacement'],
-                                message[2],
-                                flags=flags
-                            )
-                        if edit != message[2]:
-                            return "<%s> %s" % (message[0].split('!')[0], edit)
+        if not self.backlog:
+            return
+        for message in reversed(self.backlog):
+            if (channel == message[1]):
+                sed_objs = self.parse(incoming_message)
+                if sed_objs is not None:
+                    for sed_obj in sed_objs:
+                        flags = 0
+                        if sed_obj['flags']['insensitive']:
+                            flags |= regex.IGNORECASE
+                        # TODO: global and offset flag handling
+                        # doesn't appear to be possible with the python re API
+                        # ...at least not in a simple regex.sub() call
+                        edit = regex.sub(
+                            sed_obj['needle'],
+                            sed_obj['replacement'],
+                            message[2],
+                            flags=flags
+                        )
+                    if edit != message[2]:
+                        return "<%s> %s" % (message[0].split('!')[0], edit)
 
     @staticmethod
     def parse(expr):
