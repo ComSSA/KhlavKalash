@@ -11,16 +11,13 @@ class Sedbot (ISilentCommand):
     def __init__(self):
         self.backlog = []
 
-    # Unfortunately you can't have separate triggers for logging and replacing
-    # because whether it will work depends on the order the triggers dict is
-    # iterated through, which is not something you can depend on.
+    def trigger_log(self, user, channel, match):
+        message = match.group(1)
+        if not regex.match(r'^s/.*/.*/.*$', message):
+            self.backlog.append((user, channel, message))
 
     def trigger_sed(self, user, channel, match):
-        incoming_message = match.group(1)
-        sed_match = regex.match(r'^s/.*/.*/.*$', incoming_message)
-        if not sed_match:
-            self.backlog.append((user, channel, incoming_message))
-            return
+        whole_message = match.group(0)
         # No abuse
         if 'James_T' in user:
             return
@@ -28,7 +25,7 @@ class Sedbot (ISilentCommand):
             return
         for message in reversed(self.backlog):
             if (channel == message[1]):
-                sed_objs = self.parse(incoming_message)
+                sed_objs = self.parse(whole_message)
                 if sed_objs is not None:
                     for sed_obj in sed_objs:
                         flags = 0
