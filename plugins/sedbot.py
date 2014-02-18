@@ -40,7 +40,7 @@ class Sedbot (ISilentCommand):
                                 message[2],
                                 flags=flags
                             )
-                        if edit is not message[2]:
+                        if edit != message[2]:
                             return "<%s> %s" % (message[0].split('!')[0], edit)
 
     @staticmethod
