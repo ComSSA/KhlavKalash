@@ -71,15 +71,16 @@ class KhlavKalash(irc.IRCClient):
 
             # pass the command to all plugins to see if we get a response
             for plugin in self.pm.getPluginsOfCategory("Regular"):
-                output.append(plugin.plugin_object.run(command, args))
+                result = plugin.plugin_object.run(command, args)
+                if result:
+                    output.append(result)
 
         # check for silent commands
         for plugin in self.pm.getPluginsOfCategory("Silent"):
-                output.append(plugin.plugin_object.run(user, channel, msg))
+            output += plugin.plugin_object.run(user, channel, msg)
 
-        # pass all non-None responses to the channel
+        # print all collected output
         for current_output in output:
-            if current_output is not None:
                 self.msg(channel, current_output)
 
     def action(self, user, channel, msg):
