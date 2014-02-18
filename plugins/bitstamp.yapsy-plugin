@@ -1,0 +1,9 @@
+[Core]
+Name = Bitstamp
+Module = bitstamp
+
+[Documentation]
+Author = Kye Russell
+Version = 1.0
+Website = http://kyerussell.com
+Description = Provides an IRC interface to the Bitstamp Bitcoin exchange
