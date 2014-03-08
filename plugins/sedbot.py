@@ -57,6 +57,9 @@ class Sedbot (ISilentCommand):
                 )
             if edited_message != backlog_message:
                 edited_message = edited_message.replace('\n', '')
+                self.backlog.append(
+                    (backlog_user, backlog_channel, edited_message)
+                )
                 return "<%s> %s" % (backlog_user.split('!')[0], edited_message)
 
     @staticmethod
