@@ -42,6 +42,10 @@ class Sedbot (ISilentCommand):
                 # If we're on the first expression, use it to also check
                 # if the current backlog message is relevant to match
                 if sed_index == 0:
+                    if sed_object['flags']['meonly']:
+                        print backlog_user, user
+                        if backlog_user != user:
+                            break
                     if not regex.search(
                         sed_object['needle'],
                         edited_message,
@@ -73,6 +77,7 @@ class Sedbot (ISilentCommand):
                 'flags': {
                     'global': False,
                     'insensitive': False,
+                    'meonly': False,
                     'offset': 1
                 }
             })
@@ -135,6 +140,8 @@ class Sedbot (ISilentCommand):
                     out['flags']['global'] = True
                 elif f == 'i':
                     out['flags']['insensitive'] = True
+                elif f == 'm':
+                    out['flags']['meonly'] = True
                 elif f == ';':
                     result.append(out)
                     out = skeleton()
@@ -158,6 +165,9 @@ class Sedbot (ISilentCommand):
                     state = 'flags'
                 elif f == 'i':
                     out['flags']['insensitive'] = True
+                    state = 'flags'
+                elif f == 'm':
+                    out['flags']['meonly'] = True
                     state = 'flags'
                 elif f == ';':
                     result.append(out)
