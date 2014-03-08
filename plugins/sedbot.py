@@ -43,7 +43,6 @@ class Sedbot (ISilentCommand):
                 # if the current backlog message is relevant to match
                 if sed_index == 0:
                     if sed_object['flags']['meonly']:
-                        print backlog_user, user
                         if backlog_user != user:
                             break
                     if not regex.search(
