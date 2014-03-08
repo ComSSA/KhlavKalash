@@ -2,7 +2,6 @@ bin
 include
 lib
 local
-comssa.log
 KhlavKalash.conf
 *.pyc
 
