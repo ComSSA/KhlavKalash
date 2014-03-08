@@ -123,9 +123,15 @@ if __name__ == '__main__':
     # initialize logging
     log.startLogging(sys.stdout)
 
+    # Get config file location
+    if sys.argv[1] is None:
+        conf_path = 'KhlavKalash.conf'
+    else:
+        conf_path = sys.argv[1]
+
     # load the configuration file
     conf = SafeConfigParser()
-    conf.read('KhlavKalash.conf')
+    conf.read(conf_path)
 
     # activate debugging mode if necessary.
     if (conf.getboolean("Bot", "debug")):
