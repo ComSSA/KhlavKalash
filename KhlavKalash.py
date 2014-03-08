@@ -124,7 +124,7 @@ if __name__ == '__main__':
     log.startLogging(sys.stdout)
 
     # Get config file location
-    if sys.argv[1] is None:
+    if len(sys.argv) < 2:
         conf_path = 'KhlavKalash.conf'
     else:
         conf_path = sys.argv[1]
