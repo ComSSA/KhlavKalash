@@ -1,5 +1,12 @@
 from plugins.categories import ISilentCommand
 
+try:
+    import requests_pyopenssl
+    from requests.packages.urllib3 import connectionpool
+    connectionpool.ssl_wrap_socket = requests_pyopenssl.ssl_wrap_socket
+except ImportError:
+    pass
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -12,6 +19,7 @@ class URLGrabber (ISilentCommand):
             response = requests.get(url)
         except (requests.exceptions.ConnectionError) as e:
             print "Failed to load URL: %s" % url
+	    print "Message: %s" % e
         else:
             soup = BeautifulSoup(response.text)
              

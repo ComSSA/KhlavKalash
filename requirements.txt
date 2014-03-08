@@ -4,3 +4,7 @@ beautifulsoup4==4.3.2
 requests==2.2.1
 regex==2014.01.30
 BitstampClient
+pyOpenSSL
+ndg-httpsclient
+pyasn1
+
