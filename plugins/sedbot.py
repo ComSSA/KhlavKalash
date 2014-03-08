@@ -2,6 +2,7 @@ from plugins.categories import ISilentCommand
 
 import regex
 import copy
+import collections
 
 class Sedbot (ISilentCommand):
     triggers = {
@@ -9,7 +10,7 @@ class Sedbot (ISilentCommand):
     }
 
     def __init__(self):
-        self.backlog = []
+        self.backlog = collections.deque(maxlen=100)
 
     def trigger_log(self, user, channel, match):
         message = match.group(1)
@@ -20,8 +21,6 @@ class Sedbot (ISilentCommand):
         whole_message = match.group(0)
         # No abuse
         if 'James_T' in user:
-            return
-        if not self.backlog:
             return
         for message in reversed(self.backlog):
             if (channel == message[1]):
