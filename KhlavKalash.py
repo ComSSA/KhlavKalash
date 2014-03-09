@@ -8,6 +8,7 @@ from twisted.python import log
 # used in bot functionality
 import platform
 import re
+import os
 
 # read config files
 from ConfigParser import SafeConfigParser
@@ -128,6 +129,11 @@ if __name__ == '__main__':
         conf_path = 'KhlavKalash.conf'
     else:
         conf_path = sys.argv[1]
+
+    # Check if config exists.
+    if not os.path.isfile(conf_path):
+        print "Configuration file '%s' not found, please create it." % conf_path
+        sys.exit(1)
 
     # load the configuration file
     conf = SafeConfigParser()
