@@ -68,11 +68,11 @@ class MeowMeowBeenz (IRegularCommand):
         self.playerlist = PlayList()
     def command_mmb(self, user, channel, args):
         user = user.split('!')[0]
-        if len(args) < 1:
+        if len(args) == 0:
             return self.func_self(user)
-        elif len(args) < 2 and args[0] == 'list': #for the debugs
-            return self.func_list()
-        elif len(args) < 3:
+#        elif len(args) < 2 and args[0] == 'list': #for the debugs
+#            return self.func_list()
+        elif len(args) == 2:
             return self.func_rate(user,args)
 
     def func_list(self):
