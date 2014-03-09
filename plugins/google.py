@@ -5,7 +5,7 @@ import json
 
 class Google (IRegularCommand):
 	
-	def command_google(this, args):
+	def command_google(this, user, channel, args):
 		# Make request
 		search = urllib.urlencode({'q': ' '.join(args)})
 		url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&%s' % search

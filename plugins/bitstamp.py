@@ -6,7 +6,7 @@ class Bitstamp (IRegularCommand):
 	def __init__(this):
 		this.client = bitstamp.client.Public()
 
-	def command_btc(this, args):
+	def command_btc(this, user, channel, args):
 		t = this.client.ticker()
 
 		# This looks absolutely disgusting

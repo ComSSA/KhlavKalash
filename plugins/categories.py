@@ -2,9 +2,9 @@ from yapsy.IPlugin import IPlugin
 import re
 
 class IRegularCommand (IPlugin):
-	def run(self, command, args):
+	def run(self, user, channel, command, args):
 		try:
-			return getattr(self, "command_" + command)(args)
+			return getattr(self, "command_" + command)(user, channel, args)
 		except AttributeError as e:
 			pass
 

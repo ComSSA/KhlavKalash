@@ -5,5 +5,5 @@ from socket import gethostname
 
 class Uptime (IRegularCommand):
 	
-	def command_uptime(this, *args):
+	def command_uptime(this, user, channel, *args):
 		return "Uptime for %s: " % gethostname() + subprocess.check_output(["uptime"])
