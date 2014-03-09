@@ -121,7 +121,7 @@ class MeowMeowBeenz (IRegularCommand):
             self.playerlist.recalc_ratings()
             returnval = str(player)
         else:
-            returnval = 'you need to register first! Type \",mmb register\"'
+            returnval = user + ', you need to register first! Type \",mmb register\"'
         return returnval
         
     def func_rate(self, user, args):
@@ -129,14 +129,17 @@ class MeowMeowBeenz (IRegularCommand):
         rater = self.playerlist.find(user)
         if not rater:
             returnval = user + ', you need to register first! Type \",mmb register\"'
-            if victim:
+        elif victim:
+            if user == args[0]:
+                returnval = user + ', don\'t be silly, you can\'t rate yourself.'
+            elif:
                 rating = victim.findrater(user)
                 if rating:
                     rating.editrating(int(float(args[1])))
                 else:
                     victim.addrating(Rating(int(float(args[1])),rater))
                 returnval = str(user) + ' rated ' + str(args[0])
-            else:
-                returnval = args[0] + ', is not registered. To the outlands!'
+        else:
+            returnval = args[0] + ', is not registered. To the outlands!'
         self.playerlist.recalc_ratings()
         return returnval
