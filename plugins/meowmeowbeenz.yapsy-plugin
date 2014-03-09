@@ -1,0 +1,9 @@
+[Core]
+Name = meowmeowbeenz
+Module = meowmeowbeenz
+
+[Documentation]
+Author = Jason Giancono
+Version = 0.01
+Website = http://jasongi.com
+Description = early implementation of meowmeowbeenz from community
