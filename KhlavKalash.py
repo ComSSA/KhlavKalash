@@ -71,7 +71,7 @@ class KhlavKalash(irc.IRCClient):
 
             # pass the command to all plugins to see if we get a response
             for plugin in self.pm.getPluginsOfCategory("Regular"):
-                result = plugin.plugin_object.run(command, args)
+                result = plugin.plugin_object.run(command, user, channel, args)
                 if result:
                     output.append(result)
 
