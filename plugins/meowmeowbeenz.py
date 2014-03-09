@@ -132,7 +132,7 @@ class MeowMeowBeenz (IRegularCommand):
         elif victim:
             if user == args[0]:
                 returnval = user + ', don\'t be silly, you can\'t rate yourself.'
-            elif:
+            else:
                 rating = victim.findrater(user)
                 if rating:
                     rating.editrating(int(float(args[1])))
