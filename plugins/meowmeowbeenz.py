@@ -26,7 +26,9 @@ class PlayList:
             x = float(ii)/total
             player.beenz = int(math.ceil(pow(x/5,2) * 125-0.001))
             if player.beenz/5.0 > math.ceil(player.totalrating*5)/5.0:
-                player.beenz = math.ceil(player.totalrating*5)
+                player.beenz = int(math.ceil(player.totalrating*5))
+            if player.beenz < 1:
+                player.beenz = 1
                 
     def recalc_ratings(self):
         for ii in range(0,10):
