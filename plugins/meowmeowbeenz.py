@@ -88,6 +88,7 @@ class MeowMeowBeenz (IRegularCommand):
         
     def command_mmb(self, user, channel, args):
         returnval = ''
+        help = 'MeowMeowBeenz, rate everything! \n \",mmb <user> <rating>\" to rate | \",mmb\" to check your rating | \",mmb register\" to start playing | \",mmb help\" to view this message'
         user = user.split('!')[0]
         if len(args) == 0:
             returnval = self.func_self(user)
@@ -97,9 +98,14 @@ class MeowMeowBeenz (IRegularCommand):
             elif args[0] == 'register':
                 returnval = self.func_reg(user)
             elif args[0] == 'help':
-                returnval = 'MeowMeowBeenz, rate everything! \n \",mmb <user> <rating>\" to rate | \",mmb\" to check your rating | \",mmb register\" to start playing | \",mmb help\" to view this message'
+                returnval = help
         elif len(args) == 2:
-            returnval = self.func_rate(user,args)
+            if 0 < int(args[1]) < 6:
+                returnval = self.func_rate(user,args)
+            else:
+                returnval = user + ', you can only rate people between 1 and 5 MeowMeowBeenz!'
+        else:
+            returnval = help
         return returnval
             
     def func_reg(self, user):
