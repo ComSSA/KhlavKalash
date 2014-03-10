@@ -2,7 +2,7 @@ from plugins.categories import IRegularCommand
 
 import regex
 import math
-
+import re
 class PlayList:
 
     def __init__(self):
@@ -100,10 +100,11 @@ class MeowMeowBeenz (IRegularCommand):
             elif args[0] == 'help':
                 returnval = help
         elif len(args) == 2:
-            if 0 < int(args[1]) < 6:
+            p = re.compile('[1-5]$')
+            if p.match(args[1]) and 0 < int(args[1]) < 6:
                 returnval = self.func_rate(user,args)
             else:
-                returnval = user + ', you can only rate people between 1 and 5 MeowMeowBeenz!'
+                returnval = user + ', you can only rate people between 1 and 5 whole MeowMeowBeenz!'
         else:
             returnval = help
         return returnval
