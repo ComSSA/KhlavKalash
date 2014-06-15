@@ -34,6 +34,8 @@ class Sedbot (ISilentCommand):
                 continue
             edited_message = backlog_message
             for sed_index, sed_object in enumerate(sed_objects):
+                if sed_object['needle'] == '.':
+            	    continue
                 # Set up flags for the regex module
                 # TODO: global and offset flag handling
                 flags = 0
@@ -59,6 +61,8 @@ class Sedbot (ISilentCommand):
                     flags=flags
                 )
             if edited_message != backlog_message:
+                if len(edited_message) > 200:
+                    edited_message = edited_message[0:200]
                 edited_message = edited_message.replace('\n', '')
                 self.backlog.append(
                     (backlog_user, backlog_channel, edited_message)
