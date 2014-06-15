@@ -6,7 +6,7 @@ import collections
 
 class Sedbot (ISilentCommand):
     triggers = {
-        r'(^s/.*/.*/.*$)': "sed",
+        r'(^s/.*/.*$)': "sed",
         r'(.*)': "log",
     }
 
@@ -15,7 +15,7 @@ class Sedbot (ISilentCommand):
 
     def trigger_log(self, user, channel, match):
         message = match.group(0)
-        if not regex.match(r'^s/.*/.*/.*$', message):
+        if not regex.match(r'^s/.*/.*$', message):
             self.backlog.append((user, channel, message))
 
     def trigger_sed(self, user, channel, match):
@@ -177,7 +177,9 @@ class Sedbot (ISilentCommand):
                     return error(i, 'invalid flag')
             else:
                 return error(i, 'invalid parser state')
-        if state != 'flags' and state != 'flags_offset':
+        if state == 'replacement':
+            result.append(out)
+        elif state != 'flags' and state != 'flags_offset':
             return error(i, 'invalid parser state at end of expression')
         result.append(out)
         return result
