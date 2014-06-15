@@ -1,0 +1,9 @@
+[Core]
+Name = blazeit
+Module = blazeit
+
+[Documentation]
+Author = Delan Azabani
+Version = 0.0
+Website = http://www.azabani.com/
+Description = Informs users when next to blaze it
