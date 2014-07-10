@@ -36,6 +36,8 @@ class Sedbot (ISilentCommand):
             for sed_index, sed_object in enumerate(sed_objects):
                 if sed_object['needle'] == '.':
             	    continue
+                if sed_object['needle'] == '':
+            	    continue
                 # Set up flags for the regex module
                 # TODO: global and offset flag handling
                 flags = 0
