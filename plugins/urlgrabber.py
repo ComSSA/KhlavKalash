@@ -11,7 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 
 class URLGrabber (ISilentCommand):
-    triggers = {r'(http[s]?://\S+)': "url"}
+    triggers = {r'.*(http[s]?://[A-Za-z0-9&?%._~!-]+).*': "url"}
 
     def trigger_url(self, user, channel, match):
         try:
