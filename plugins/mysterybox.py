@@ -88,7 +88,7 @@ class TheMysteryBox (IRegularCommand):
             returnstr = returnstr + ' ' + string.split(player.name,'!')[0] + ' is now dead.'
             self.playerlist.players.remove(self.playerlist.find(user)[0])
         if (len(self.playerlist.players) == 1):
-            returnstr = returnstr + '\n' + string.split(self.playerlist.players[0],'!')[0] + ' has won!'
+            returnstr = returnstr + '\n' + string.split(self.playerlist.players[0].name,'!')[0] + ' has won!'
             self.playerlist = PlayList()
             self.box = 0
             self.playerIndex = 0
