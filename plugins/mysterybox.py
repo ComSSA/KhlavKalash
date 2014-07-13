@@ -56,7 +56,6 @@ class TheMysteryBox (IRegularCommand):
         if (len(self.playerlist.players) < 2):
             return 'less than 2 people registered!'
         else:
-            return 'debug'
             self.playing == True
             self.box = random.randrange(8,14)
             self.admin = admin
