@@ -76,7 +76,7 @@ class TheMysteryBox (IRegularCommand):
         else:
             self.box = self.box - move
             self.playerIndex = (self.playerIndex+1)%len(self.playerlist.players)
-            return user + ' passed the box to ' self.playerlist.players[self.playerIndex].name '. the box displays the number ' + str(self.box) + '!'
+            return user + ' passed the box to ' + self.playerlist.players[self.playerIndex].name + '. the box displays the number ' + str(self.box) + '!'
             
     def boom(self, user):
         player = self.playerlist.find(user)[0]
