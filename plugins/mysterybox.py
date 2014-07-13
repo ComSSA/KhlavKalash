@@ -42,7 +42,7 @@ class TheMysteryBox (IRegularCommand):
                 return self.move(int(double(args[0])))
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
-        elif (args[0] == 'start' and self.playing == False)
+        elif (args[0] == 'start' and self.playing == False):
             start(user)
             
     def register(self, name):
