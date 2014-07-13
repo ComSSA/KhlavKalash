@@ -24,7 +24,7 @@ class Player:
         self.lives = lives
         
 class TheMysteryBox (IRegularCommand):
-	
+    
     def __init__(self):
         self.playerlist = PlayList()
         self.box = 0
@@ -32,8 +32,8 @@ class TheMysteryBox (IRegularCommand):
         self.playing = False
         self.admin = ''
         
-	def command_mysterybox(self, user, channel, *args):
-        if (len(args) == 0):
+    def command_mysterybox(self, user, channel, *args):
+        if(len(args) == 0):
             if (not self.playing):
                 return self.register(user)
         else if (args[0] == '2' or args[0] == '1'):
