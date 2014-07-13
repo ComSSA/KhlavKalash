@@ -1,6 +1,6 @@
 from plugins.categories import IRegularCommand
 import string
-
+import random
 class PlayList:
     def __init__(self):
         self.players = []
