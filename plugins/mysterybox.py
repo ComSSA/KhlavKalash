@@ -61,7 +61,7 @@ class TheMysteryBox (IRegularCommand):
             self.box = random.randrange(8,14)
             self.admin = admin
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
-            return string.split(str(self.playerlist.players[self.playerIndex][0].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
             
     def stop(self):
         self.playerlist = PlayList()
