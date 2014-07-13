@@ -1,4 +1,5 @@
 from plugins.categories import IRegularCommand
+import string
 
 class PlayList:
     def __init__(self):
@@ -41,22 +42,25 @@ class TheMysteryBox (IRegularCommand):
                 return self.move(int(double(args[0])))
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
+        elif (args[0] == 'start' and self.playing == False)
+            start(user)
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
             self.playerlist.append(Player(name,2))
-            return name + ' has been registered'
+            return string.split(name,'!')[0] + ' has been registered'
         else:
-            return name + ' is already registered'
+            return string.split(name,'!')[0] + ' is already registered'
             
     def start(self, admin):
         if (len(self.playerlist.players) < 2):
             return 'less than 2 people registered!'
         else:
+            self.playing == True
             self.box = random.randrange(8,14)
             self.admin = admin
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
-            return str(self.playerlist.players[self.playerIndex][0].name) +' has the box with ' + str(self.box) + ' left on the clock'
+            return string.split(str(self.playerlist.players[self.playerIndex][0].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
             
     def stop(self):
         self.playerlist = PlayList()
@@ -78,9 +82,20 @@ class TheMysteryBox (IRegularCommand):
             
     def boom(self, user):
         player = self.playerlist.find(user)[0]
-        returnstr = 'Boom! ' + user + ' has been blown up!'
+        returnstr = 'Boom! ' + string.split(user,'!')[0] + ' has been blown up!'
         player.lives = player.lives-1
         if (player.lives < 1):
-            returnstr = returnstr + ' ' + player.name + ' is now dead.'
+            returnstr = returnstr + ' ' + string.split(player.name,'!')[0] + ' is now dead.'
             self.playerlist.players.remove(self.playerlist.find(user)[0])
+        if (len(self.playerlist.players) == 1):
+            returnstr = returnstr + '\n' + string.split(self.playerlist.players[0],'!')[0] + ' has won!'
+            self.playerlist = PlayList()
+            self.box = 0
+            self.playerIndex = 0
+            self.playing = False
+            self.admin = ''
+        else:
+            self.box = self.box = random.randrange(8,14)
+            self.playerIndex = random.randrange(0,len(self.playerlist.players))
+            returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex][0].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
         return returnstr
