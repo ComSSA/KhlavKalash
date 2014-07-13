@@ -97,5 +97,5 @@ class TheMysteryBox (IRegularCommand):
         else:
             self.box = self.box = random.randrange(8,14)
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
-            returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex][0].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
         return returnstr
