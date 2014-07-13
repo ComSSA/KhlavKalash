@@ -82,8 +82,8 @@ class TheMysteryBox (IRegularCommand):
             
     def boom(self, user):
         player = self.playerlist.find(user)[0]
-        returnstr = 'Boom! ' + string.split(user,'!')[0] + ' has been blown up! They have ' + str(player.lives) + ' lives left.'
         player.lives = player.lives-1
+        returnstr = 'Boom! ' + string.split(user,'!')[0] + ' has been blown up! They have ' + str(player.lives) + ' lives left.'
         if (player.lives < 1):
             returnstr = returnstr + ' ' + string.split(player.name,'!')[0] + ' is now dead.'
             self.playerlist.players.remove(self.playerlist.find(user)[0])
