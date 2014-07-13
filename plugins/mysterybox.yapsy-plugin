@@ -1,0 +1,9 @@
+[Core]
+Name = MysteryBox
+Module = mysterybox
+
+[Documentation]
+Author = Jason Giancono
+Version = 0.001
+Website = http://jasongi.com
+Description = plays a game of the mystery
