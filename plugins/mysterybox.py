@@ -71,9 +71,9 @@ class TheMysteryBox (IRegularCommand):
         return 'Admin has stopped the game'
         
     def move(self, move, user):
-        if (move > box):
+        if (move > self.box):
             return self.boom(user)
-        elif (move == box):
+        elif (move == self.box):
             return self.boom(self.playerlist.players[(self.playerlist.find(user)[1]+1)%len(self.playerlist.players)].name)
         else:
             self.box = self.box - move
