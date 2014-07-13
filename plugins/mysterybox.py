@@ -38,8 +38,7 @@ class TheMysteryBox (IRegularCommand):
             if (not self.playing):
                 return self.register(user)
         elif (args[0] == '2' or args[0] == '1'):
-            if (True):
-                return 'debug'
+            if (self.playing and  self.playerlist.find(user) and self.playerIndex == self.playerlist.find(user)[1]):
                 return self.move(int(double(args[0])))
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
@@ -57,7 +56,7 @@ class TheMysteryBox (IRegularCommand):
         if (len(self.playerlist.players) < 2):
             return 'less than 2 people registered!'
         else:
-            self.playing == True
+            self.playing = True
             self.box = random.randrange(8,14)
             self.admin = admin
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
