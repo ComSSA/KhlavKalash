@@ -35,7 +35,7 @@ class TheMysteryBox (IRegularCommand):
     def command_mysterybox(self, user, channel, *args):
         if(len(args) == 1):
             if (not self.playing):
-                return self.register(user)
+                return self.register(user) + ' args: ' + str(len(args))
         elif (args[1] == '2' or args[1] == '1'):
             if (self.playing and  self.playerlist.find(user) != False and self.playerIndex == self.playerlist.find(user)[1]):
                 return self.move(int(double(args[0])))
