@@ -43,7 +43,7 @@ class TheMysteryBox (IRegularCommand):
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
         elif (args[0] == 'start' and self.playing == False):
-            start(user)
+            self.start(user)
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
@@ -72,9 +72,9 @@ class TheMysteryBox (IRegularCommand):
         
     def move(self, move, user):
         if (move > box):
-            return boom(user)
+            return self.boom(user)
         elif (move == box):
-            return boom(self.playerlist.players[(self.playerlist.find(user)[1]+1)%len(self.playerlist.players)].name)
+            return self.boom(self.playerlist.players[(self.playerlist.find(user)[1]+1)%len(self.playerlist.players)].name)
         else:
             self.box = self.box - move
             self.playerIndex = (self.playerIndex+1)%len(self.playerlist.players)
