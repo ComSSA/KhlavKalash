@@ -43,7 +43,7 @@ class TheMysteryBox (IRegularCommand):
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
         elif (args[0] == 'start' and self.playing == False):
-            self.start(user)
+            return self.start(user)
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
