@@ -42,7 +42,7 @@ class TheMysteryBox (IRegularCommand):
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
         else:
-            return 'hey'
+            return str(len(args))
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
