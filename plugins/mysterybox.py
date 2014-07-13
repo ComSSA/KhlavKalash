@@ -39,7 +39,7 @@ class TheMysteryBox (IRegularCommand):
                 return self.register(user)
         elif (args[0] == '2' or args[0] == '1'):
             if (self.playing and  self.playerlist.find(user) and self.playerIndex == self.playerlist.find(user)[1]):
-                return self.move(int(float(args[0])))
+                return self.move(int(float(args[0])),user)
         elif (args[0] == 'stop' and user == self.admin):
             return stop()
         elif (args[0] == 'start' and self.playing == False):
