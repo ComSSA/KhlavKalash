@@ -6,4 +6,4 @@ Module = mysterybox
 Author = Jason Giancono
 Version = 0.001
 Website = http://jasongi.com
-Description = plays a game of the mystery. Everybody registers with ,mysterybox and then an admin starts the game with ",mysterybox start". The player with the box then plays their move with either ",mysterybox 1" or ",mysterybox 2". The game continues until only one player is alive. Each player gets 2 lives. The person who started the game can stop it at any time by typing ",mysterybox stop".
+Description = plays a game of the mystery. Everybody registers with ,mysterybox computer players can be added with the command ,mysterbox addcom and then an admin starts the game with ",mysterybox start". The player with the box then plays their move with either ",mysterybox 1" or ",mysterybox 2". The game continues until only one player is alive. Each player gets 2 lives. The person who started the game can stop it at any time by typing ",mysterybox stop".
