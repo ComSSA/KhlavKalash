@@ -1,6 +1,8 @@
 from plugins.categories import IRegularCommand
 import string
 import random
+from threading import Timer
+
 class PlayList:
     def __init__(self):
         self.players = []
@@ -33,6 +35,7 @@ class TheMysteryBox (IRegularCommand):
         self.playing = False
         self.admin = ''
         
+        
     def command_mysterybox(self, user, channel, args):
         if(len(args) == 0):
             if (not self.playing):
@@ -61,6 +64,8 @@ class TheMysteryBox (IRegularCommand):
             self.admin = admin
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            self.timeout = Timer(20.0,self.boom,args=[self.playerlist.players[self.playerIndex].name])
+            self.timeout.start()
             
     def stop(self):
         self.playerlist = PlayList()
@@ -68,18 +73,24 @@ class TheMysteryBox (IRegularCommand):
         self.playerIndex = 0
         self.playing = False
         self.admin = ''
+        self.timeout.cancel()
         return 'Admin has stopped the game'
         
     def move(self, move, user):
+        self.timeout.cancel()
         if (move > self.box):
-            return self.boom(user)
+            returnstr = self.boom(user)
         elif (move == self.box):
-            return self.boom(self.playerlist.players[(self.playerlist.find(user)[1]+1)%len(self.playerlist.players)].name)
+            returnstr = self.boom(self.playerlist.players[(self.playerlist.find(user)[1]+1)%len(self.playerlist.players)].name)
         else:
             self.box = self.box - move
             self.playerIndex = (self.playerIndex+1)%len(self.playerlist.players)
-            return string.split(user,'!')[0] + ' passed the box to ' + string.split(self.playerlist.players[self.playerIndex].name,'!')[0] + '. The box displays the number ' + str(self.box) + '!'
-            
+            returnstr = string.split(user,'!')[0] + ' passed the box to ' + string.split(self.playerlist.players[self.playerIndex].name,'!')[0] + '. The box displays the number ' + str(self.box) + '!'
+        if (self.playing): #restart the timeout
+            self.timeout = Timer(20.0,self.boom,args=[self.playerlist.players[self.playerIndex].name])
+            self.timeout.start()
+        return returnstr
+        
     def boom(self, user):
         player = self.playerlist.find(user)[0]
         player.lives = player.lives-1
