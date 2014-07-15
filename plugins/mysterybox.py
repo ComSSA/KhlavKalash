@@ -150,8 +150,6 @@ class TheMysteryBox (IRegularCommand):
         
     def timeout_callback(self, user, context, channel):
         context.msg(channel, self.boom(user))
-        self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
-        self.timeout.start()
 
     def boom(self, user):
         player = self.playerlist.find(user)[0]
@@ -167,4 +165,6 @@ class TheMysteryBox (IRegularCommand):
             self.box = self.box = random.randrange(8,14)
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
+            self.timeout.start()
         return returnstr
