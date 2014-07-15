@@ -115,7 +115,7 @@ class TheMysteryBox (IRegularCommand):
             return ''
         else:
             tree = MinMax(len(self.playerlist.players), self.box)
-            return self.move(tree.doMove, self.playerlist.players[self.playerIndex].name[0])
+            return self.move(tree.doMove, self.playerlist.players[self.playerIndex].name)
             
     def start(self, admin):
         if (len(self.playerlist.players) < 2):
