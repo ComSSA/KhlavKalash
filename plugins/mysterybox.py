@@ -94,7 +94,7 @@ class TheMysteryBox (IRegularCommand):
         return returnstr
         
     def timeout_callback(self, user, context, channel):
-        context.msg(channel, self.boom(self, user))
+        context.msg(channel, self.boom(user))
         self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
         self.timeout.start()
 
