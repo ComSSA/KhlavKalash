@@ -3,6 +3,54 @@ import string
 import random
 from threading import Timer
 
+class MinMax:
+	def __init__(self, players, timer):
+		self.numPlayers = players-1
+		self.head = MinNode(timer, 0, players)
+		self.doMove = self.head.max()
+
+class MinNode:
+	def __init__(self, timer, turn, players):
+		self.costs = []
+		self.bestPath = None
+		self.timer = timer
+		self.turn = turn
+		self.players = players
+		if (self.timer > 0):
+			self.left = MinNode(self.timer-1,turn+1,players)
+			self.right = MinNode(self.timer-2, turn+1,players)
+			if (self.timer-2 < 0):
+				self.right.costs = []
+				for ii in range(self.players):
+					if (self.turn%self.players == ii):
+						self.right.costs.append(0)
+					else: 
+						self.right.costs.append(1)
+		else:
+			self.left = None
+			self.right = None
+			for ii in range(self.players):
+				if (self.turn%self.players == ii):
+					self.costs.append(0)
+				else: 
+					self.costs.append(1)
+	def max(self):
+		if(self.costs == []):
+			self.right.max()
+			self.left.max()
+			self.bestPath = 0
+			if (self.right.costs[self.turn%self.players] > self.left.costs[self.turn%self.players]):
+				self.costs = self.right.costs
+				self.bestPath = 2
+			elif (self.right.costs[self.turn%self.players] < self.left.costs[self.turn%self.players]):
+				self.costs = self.left.costs
+				self.bestPath = 1
+			else:
+				for ii in range(self.players):
+					self.costs.append(float(self.right.costs[ii]+self.left.costs[ii])/2.0)
+					self.bestPath = random.randrange(1,3)
+		return self.bestPath
+
 class PlayList:
     def __init__(self):
         self.players = []
@@ -29,12 +77,15 @@ class Player:
 class TheMysteryBox (IRegularCommand):
     
     def __init__(self):
+        self.reset()
+        
+    def reset(self)
         self.playerlist = PlayList()
         self.box = 0
         self.playerIndex = 0
         self.playing = False
         self.admin = ''
-        
+        self.ais  = 0
         
     def command_mysterybox(self, context, user, channel, args):
         self.context = context
@@ -49,6 +100,9 @@ class TheMysteryBox (IRegularCommand):
             return self.stop()
         elif (args[0] == 'start' and self.playing == False):
             return self.start(user)
+        elif (args[0] == 'addcom' and self.playing == False):
+            self.ais = self.ais + 1
+            return self.register('@computer_' + str(self.ais))
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
@@ -56,6 +110,12 @@ class TheMysteryBox (IRegularCommand):
             return string.split(name,'!')[0] + ' has been registered'
         else:
             return string.split(name,'!')[0] + ' is already registered'
+    def ai()
+        if (self.playerlist.players[self.playerIndex].name[0] != '@'):
+            return ''
+        else:
+            tree = MinMax(len(self.playerlist.players), self.box)
+            return move(tree.doMove, self.playerlist.players[self.playerIndex].name[0])
             
     def start(self, admin):
         if (len(self.playerlist.players) < 2):
@@ -70,12 +130,7 @@ class TheMysteryBox (IRegularCommand):
             return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
             
     def stop(self):
-        self.playerlist = PlayList()
-        self.box = 0
-        self.playerIndex = 0
-        self.playing = False
-        self.admin = ''
-        self.timeout.cancel()
+        self.reset()
         return 'Admin has stopped the game'
         
     def move(self, move, user):
@@ -107,11 +162,7 @@ class TheMysteryBox (IRegularCommand):
             self.playerlist.players.remove(self.playerlist.find(user)[0])
         if (len(self.playerlist.players) == 1):
             returnstr = returnstr + '\n' + string.split(self.playerlist.players[0].name,'!')[0] + ' has won!'
-            self.playerlist = PlayList()
-            self.box = 0
-            self.playerIndex = 0
-            self.playing = False
-            self.admin = ''
+            self.reset()
         else:
             self.box = self.box = random.randrange(8,14)
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
