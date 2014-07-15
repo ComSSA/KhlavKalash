@@ -102,7 +102,7 @@ class TheMysteryBox (IRegularCommand):
             return self.start(user)
         elif (args[0] == 'addcom' and self.playing == False):
             self.ais = self.ais + 1
-            return self.register('@computer_' + str(self.ais))
+            return self.register('@computer_' + str(self.ais) + '!')
             
     def register(self, name):
         if (self.playerlist.find(name) == False):
@@ -127,7 +127,7 @@ class TheMysteryBox (IRegularCommand):
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
-            return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock' + self.ai()
+            return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock' + '\n' + self.ai()
             
     def stop(self):
         self.reset()
@@ -146,10 +146,10 @@ class TheMysteryBox (IRegularCommand):
         if (self.playing): #restart the timeout
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
-        return returnstr + self.ai()
+        return returnstr + '\n' + self.ai()
         
     def timeout_callback(self, user, context, channel):
-        context.msg(channel, self.boom(user))
+        context.msg(channel, self.boom(user) + '\n' + self.ai())
 
     def boom(self, user):
         player = self.playerlist.find(user)[0]
