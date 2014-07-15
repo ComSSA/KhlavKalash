@@ -146,6 +146,7 @@ class TheMysteryBox (IRegularCommand):
             self.playerIndex = (self.playerIndex+1)%len(self.playerlist.players)
             returnstr = string.split(user,'!')[0] + ' passed the box to ' + string.split(self.playerlist.players[self.playerIndex].name,'!')[0] + '. The box displays the number ' + str(self.box) + '!'
         if (self.playing): #restart the timeout
+            self.timeout.cancel()
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
         return returnstr + '\n' + self.ai()
@@ -167,6 +168,7 @@ class TheMysteryBox (IRegularCommand):
             self.box = self.box = random.randrange(8,14)
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            self.timeout.cancel()
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
         return returnstr
