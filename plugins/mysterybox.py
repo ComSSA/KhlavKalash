@@ -111,10 +111,11 @@ class TheMysteryBox (IRegularCommand):
         else:
             return string.split(name,'!')[0] + ' is already registered'
     def ai(self):
+        print self.playerIndex
         if (self.playerlist.players[self.playerIndex].name[0] != '@'):
             return ''
         else:
-            print self.playerIndex
+            self.timeout.cancel()
             tree = MinMax(len(self.playerlist.players), self.box)
             return self.move(tree.doMove, self.playerlist.players[self.playerIndex].name)
             
