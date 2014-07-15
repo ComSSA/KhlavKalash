@@ -111,7 +111,6 @@ class TheMysteryBox (IRegularCommand):
         else:
             return string.split(name,'!')[0] + ' is already registered'
     def ai(self):
-        print self.playerIndex
         if (self.playing is False or self.playerlist.players[self.playerIndex].name[0] != '@'):
             return ''
         else:
