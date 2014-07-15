@@ -19,7 +19,7 @@ from plugins.categories import IRegularCommand
 
 class Uptime (IRegularCommand):
 	
-	def command_hello(this, *args):
+	def command_hello(self, context, user, channel, args):
 		return "Hello, World!"
 
 ```
@@ -28,7 +28,11 @@ So easy even a BTech could do it!™
 
 ### Command Types
 There are two command types that you can hook in your plugins, regular commands or
-silenet commands.
+silenet commands. Both types also pass in a `context` object which can be used to make
+plugins which aren't triggered by messages (good for implementing callbacks). They are
+also passed `user` and `channel` which are the names of the channel and user. This is
+useful if you want to keep track of users for games and also if you want to make plugins
+pm compatible by checking if the channel is the user.
 
 #### Regular Commands
 Regular commands are the IRC commands you're used to. They usually start with a prefix
@@ -58,7 +62,7 @@ from plugins.categories import ISilentCommand
 class URLGrabber (ISilentCommand):
     triggers = {r'(http[s]?://\S+)': "url"}
 
-    def trigger_url(self, match):
+    def trigger_url(self, context, user, channel, match):
         return "%s is a URL!" % match.group(1)
 ```
 
