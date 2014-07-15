@@ -149,7 +149,7 @@ class TheMysteryBox (IRegularCommand):
         return returnstr + '\n' + self.ai()
         
     def timeout_callback(self, user, context, channel):
-        context.msg(channel, self.boom(user) + '\n' + self.ai())
+        context.msg(channel, self.move(99,user))
 
     def boom(self, user):
         player = self.playerlist.find(user)[0]
