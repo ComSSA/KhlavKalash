@@ -79,7 +79,7 @@ class TheMysteryBox (IRegularCommand):
     def __init__(self):
         self.reset()
         
-    def reset(self)
+    def reset(self):
         self.playerlist = PlayList()
         self.box = 0
         self.playerIndex = 0
