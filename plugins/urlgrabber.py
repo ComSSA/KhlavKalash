@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 class URLGrabber (ISilentCommand):
     triggers = {r'.*(http[s]?://[A-Za-z0-9&?%._~!/-]+).*': "url"}
 
-    def trigger_url(self, user, channel, match):
+    def trigger_url(self, context, user, channel, match):
         try:
             url = match.group(1)
             response = requests.get(url)

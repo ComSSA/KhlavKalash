@@ -8,7 +8,7 @@ zones = pytz.all_timezones[:]
 
 class BlazeIt (IRegularCommand):
 	
-	def command_blazeit(this, user, channel, args):
+	def command_blazeit(this, context, user, channel, args):
 		random.shuffle(zones)
 		realnow = datetime.now(pytz.timezone('Etc/UTC'))
 		bestid = None
