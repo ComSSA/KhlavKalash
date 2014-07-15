@@ -86,7 +86,7 @@ class MeowMeowBeenz (IRegularCommand):
     def __init__(self):
         self.playerlist = PlayList()
         
-    def command_mmb(self, user, channel, args):
+    def command_mmb(self, context, user, channel, args):
         returnval = ''
         help = 'MeowMeowBeenz, rate everything! \n \",mmb <user> <rating>\" to rate | \",mmb\" to check your rating | \",mmb register\" to start playing | \",mmb help\" to view this message'
         user = user.split('!')[0]

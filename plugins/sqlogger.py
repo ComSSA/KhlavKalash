@@ -21,7 +21,7 @@ class SQLogger (ISilentCommand):
 
 		self.conn.commit()
 	
-	def trigger_log(self, user, channel, match):
+	def trigger_log(self, context, user, channel, match):
 		now = datetime.datetime.now()
 
 		self.conn.execute("INSERT INTO EVENTS (Event, Context, Origin, Body, TS) \

@@ -36,7 +36,7 @@ class TheMysteryBox (IRegularCommand):
         self.admin = ''
         
         
-    def command_mysterybox(self, user, channel, args):
+    def command_mysterybox(self, context, user, channel, args):
         if(len(args) == 0):
             if (not self.playing):
                 return self.register(user)
