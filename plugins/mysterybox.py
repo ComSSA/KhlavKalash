@@ -127,7 +127,7 @@ class TheMysteryBox (IRegularCommand):
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
-            return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
+            return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock' + ai()
             
     def stop(self):
         self.reset()
