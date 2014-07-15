@@ -114,8 +114,8 @@ class TheMysteryBox (IRegularCommand):
         if (self.playerlist.players[self.playerIndex].name[0] != '@'):
             return ''
         else:
+            print self.playerIndex
             tree = MinMax(len(self.playerlist.players), self.box)
-            print tree.doMove
             return self.move(tree.doMove, self.playerlist.players[self.playerIndex].name)
             
     def start(self, admin):
