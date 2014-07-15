@@ -110,7 +110,7 @@ class TheMysteryBox (IRegularCommand):
             return string.split(name,'!')[0] + ' has been registered'
         else:
             return string.split(name,'!')[0] + ' is already registered'
-    def ai()
+    def ai():
         if (self.playerlist.players[self.playerIndex].name[0] != '@'):
             return ''
         else:
@@ -146,7 +146,7 @@ class TheMysteryBox (IRegularCommand):
         if (self.playing): #restart the timeout
             self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
             self.timeout.start()
-        return returnstr
+        return returnstr + ai()
         
     def timeout_callback(self, user, context, channel):
         context.msg(channel, self.boom(user))
