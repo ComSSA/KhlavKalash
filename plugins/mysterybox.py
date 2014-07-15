@@ -127,7 +127,7 @@ class TheMysteryBox (IRegularCommand):
             self.box = random.randrange(8,14)
             self.admin = admin
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
-            self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
+            self.timeout = Timer(20.0,self.timeout_callback)
             self.timeout.start()
             return string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock' + '\n' + self.ai()
             
@@ -147,12 +147,12 @@ class TheMysteryBox (IRegularCommand):
             returnstr = string.split(user,'!')[0] + ' passed the box to ' + string.split(self.playerlist.players[self.playerIndex].name,'!')[0] + '. The box displays the number ' + str(self.box) + '!'
         if (self.playing): #restart the timeout
             self.timeout.cancel()
-            self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
+            self.timeout = Timer(20.0,self.timeout_callback)
             self.timeout.start()
         return returnstr + '\n' + self.ai()
         
-    def timeout_callback(self, user, context, channel):
-        context.msg(channel, self.move(99,user))
+    def timeout_callback(self):
+        self.context.msg(self.channel, self.move(99,self.playerlist.players[self.playerIndex].name))
 
     def boom(self, user):
         player = self.playerlist.find(user)[0]
@@ -169,6 +169,6 @@ class TheMysteryBox (IRegularCommand):
             self.playerIndex = random.randrange(0,len(self.playerlist.players))
             returnstr = returnstr + '\n' + string.split(str(self.playerlist.players[self.playerIndex].name),'!')[0] +' has the box with ' + str(self.box) + ' left on the clock'
             self.timeout.cancel()
-            self.timeout = Timer(20.0,self.timeout_callback,[self.playerlist.players[self.playerIndex].name,self.context,self.channel])
+            self.timeout = Timer(20.0,self.timeout_callback)
             self.timeout.start()
         return returnstr
