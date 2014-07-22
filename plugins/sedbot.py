@@ -55,7 +55,7 @@ class Sedbot (ISilentCommand):
                 # Now let's edit the message
                 edited_message = regex.sub(
                     sed_object['needle'],
-                    sed_object['replacement'],
+                    chr(22) + sed_object['replacement'] + chr(22),
                     edited_message,
                     flags=flags
                 )
