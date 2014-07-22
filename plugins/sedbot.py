@@ -20,9 +20,6 @@ class Sedbot (ISilentCommand):
 
     def trigger_sed(self, context, user, channel, match):
         sed_message = match.group(0)
-        # No abuse
-        if 'James_T' in user:
-            return
         for backlog_entry in reversed(self.backlog):
             backlog_user = backlog_entry[0]
             backlog_channel = backlog_entry[1]
