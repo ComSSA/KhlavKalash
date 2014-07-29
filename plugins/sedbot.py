@@ -66,7 +66,7 @@ class Sedbot (ISilentCommand):
                     edited_message_storage,
                     flags=flags
                 )
-            if edited_message != backlog_message:
+            if edited_message_storage != backlog_message:
                 if len(edited_message) > 200:
                     edited_message = edited_message[0:200]
                 edited_message = edited_message.replace('\n', '')
