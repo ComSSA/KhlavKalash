@@ -14,12 +14,14 @@ class URLGrabber (ISilentCommand):
     triggers = {r'.*(http[s]?://[A-Za-z0-9&?%._~!/=+-]+).*': "url"}
 
     def trigger_url(self, context, user, channel, match):
+        if user == 'JustCommit':
+            return
         try:
             url = match.group(1)
             response = requests.get(url)
         except (requests.exceptions.ConnectionError) as e:
             print "Failed to load URL: %s" % url
-	    print "Message: %s" % e
+        print "Message: %s" % e
         else:
             soup = BeautifulSoup(response.text)
              
