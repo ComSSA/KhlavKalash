@@ -73,7 +73,7 @@ class Sedbot (ISilentCommand):
                 self.backlog.append(
                     (backlog_user, backlog_channel, edited_message_storage)
                 )
-                return "<%s> %s" % (backlog_user.split('!')[0], edited_message)
+                return "(%s) <%s> %s" % (user.split('!')[0], backlog_user.split('!')[0], edited_message)
 
     @staticmethod
     def parse(expr):
