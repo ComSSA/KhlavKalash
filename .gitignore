@@ -4,6 +4,6 @@ lib
 local
 KhlavKalash.conf
 *.pyc
-
-
+.Python
+pip-selfcheck.json
 *.db
