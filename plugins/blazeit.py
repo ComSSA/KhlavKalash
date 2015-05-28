@@ -30,7 +30,7 @@ class BlazeIt (IRegularCommand):
 				h, m, s
 			))
 			afternoon = (h >= 11)
-			while not then > now:
+			while now > then:
 				whole_day = timedelta(1)
 				if both or afternoon:
 					then = tz.localize(datetime(
