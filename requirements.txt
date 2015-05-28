@@ -7,4 +7,4 @@ BitstampClient
 pyOpenSSL
 ndg-httpsclient
 pyasn1
-
+pytz
