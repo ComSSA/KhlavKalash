@@ -21,7 +21,7 @@ class URLGrabber (ISilentCommand):
             response = requests.get(url)
         except (requests.exceptions.ConnectionError) as e:
             print "Failed to load URL: %s" % url
-        print "Message: %s" % e
+            print "Message: %s" % e
         else:
             soup = BeautifulSoup(response.text)
              
