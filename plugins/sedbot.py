@@ -187,9 +187,7 @@ class Sedbot (ISilentCommand):
                     return error(i, 'invalid flag')
             else:
                 return error(i, 'invalid parser state')
-        if state == 'replacement':
-            result.append(out)
-        elif state != 'flags' and state != 'flags_offset':
+        if state != 'replacement' and state != 'flags' and state != 'flags_offset':
             return error(i, 'invalid parser state at end of expression')
         result.append(out)
         return result
