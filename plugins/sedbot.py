@@ -14,12 +14,12 @@ class Sedbot (ISilentCommand):
         self.backlog = collections.deque(maxlen=100)
 
     def trigger_log(self, context, user, channel, match):
-        message = match.group(0)
+        message = match.group(0).decode('utf-8')
         if not regex.match(r'^s/.*/.*$', message):
             self.backlog.append((user, channel, message))
 
     def trigger_sed(self, context, user, channel, match):
-        sed_message = match.group(0)
+        sed_message = match.group(0).decode('utf-8')
         for backlog_entry in reversed(self.backlog):
             backlog_user = backlog_entry[0]
             backlog_channel = backlog_entry[1]
