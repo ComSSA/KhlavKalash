@@ -18,7 +18,8 @@ class URLGrabber (ISilentCommand):
             return
         try:
             url = match.group(1)
-            response = requests.get(url)
+            agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 Safari/537.36'
+            response = requests.get(url, headers={ 'User-Agent': agent })
         except (requests.exceptions.ConnectionError) as e:
             print "Failed to load URL: %s" % url
             print "Message: %s" % e
