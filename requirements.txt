@@ -8,4 +8,3 @@ pyOpenSSL
 ndg-httpsclient
 pyasn1
 pytz
-ftfy==4.0.0
