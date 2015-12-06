@@ -9,6 +9,7 @@ except ImportError:
 
 import requests
 from bs4 import BeautifulSoup
+import ftfy
 
 class URLGrabber (ISilentCommand):
     triggers = {r'.*(http[s]?://[A-Za-z0-9&?%._~!/=+-:]+).*': "url"}
@@ -28,6 +29,7 @@ class URLGrabber (ISilentCommand):
              
             if soup.title and soup.title.text:
                 title = soup.title.string
+                title = ftfy.fix_text(title)
                 title = title.replace('\n', '')    # remove newlines
                 title = title.replace('\x01', '')  # remove dangerous control character \001
                 title = ' '.join(title.split())    # normalise all other whitespace
